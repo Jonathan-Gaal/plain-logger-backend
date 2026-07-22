@@ -1,0 +1,37 @@
+{
+  "name": "plain-logger-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API backend for Plain Logger: an internal diagnostic tool for Tier-2 Technical Support Specialists. Parses raw internal-system JSON error logs, looks the error code up deterministically against a known-errors table, and returns a technical specialist diagnostic plus a plain-language employee-facing explanation. Runs zero-config locally against SQLite, or against Supabase/Postgres once configured for deploy. Pure API — no UI. Pairs with a separate plain-logger-frontend.",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run",
+    "db:init": "node scripts/db-init.js",
+    "db:seed": "node scripts/db-seed.js",
+    "db:reset": "rm -f local.db local.db-journal && npm run db:init && npm run db:seed"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "zod": "^3.23.0",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "vitest": "^2.0.5",
+    "dotenv": "^16.4.5",
+    "pg": "^8.12.0",
+    "@types/pg": "^8.11.6"
+  }
+}
