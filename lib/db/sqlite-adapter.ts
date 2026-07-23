@@ -90,6 +90,42 @@ export class SqliteAdapter implements DbAdapter {
     }
   }
 
+  async createErrorTemplate(fields: {
+    error_code: string;
+    internal_system: string;
+    category: string;
+    severity: "low" | "medium" | "high" | "critical";
+    is_self_service: boolean;
+    self_service_steps: string | null;
+    specialist_diagnostic: string;
+    employee_message: string;
+    escalate_to_dev: boolean;
+  }): Promise<QueryResult<{ id: string }>> {
+    try {
+      const conn = getConnection();
+      const id = crypto.randomUUID();
+      const stmt = conn.prepare(
+        `INSERT INTO error_templates (id, error_code, internal_system, category, severity, is_self_service, self_service_steps, specialist_diagnostic, employee_message, escalate_to_dev, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
+      );
+      stmt.run(
+        id,
+        fields.error_code,
+        fields.internal_system,
+        fields.category,
+        fields.severity,
+        fields.is_self_service ? 1 : 0,
+        fields.self_service_steps,
+        fields.specialist_diagnostic,
+        fields.employee_message,
+        fields.escalate_to_dev ? 1 : 0
+      );
+      return ok({ id });
+    } catch (err) {
+      return fail(err);
+    }
+  }
+
   async insertParseHistory(fields: {
     raw_payload: unknown;
     extracted_code: string | null;

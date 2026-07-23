@@ -46,6 +46,30 @@ export class SupabaseAdapter implements DbAdapter {
     }
   }
 
+  async createErrorTemplate(fields: {
+    error_code: string;
+    internal_system: string;
+    category: string;
+    severity: "low" | "medium" | "high" | "critical";
+    is_self_service: boolean;
+    self_service_steps: string | null;
+    specialist_diagnostic: string;
+    employee_message: string;
+    escalate_to_dev: boolean;
+  }): Promise<QueryResult<{ id: string }>> {
+    try {
+      const { data, error } = await this.client
+        .from("error_templates")
+        .insert(fields)
+        .select("id")
+        .single();
+      if (error) throw error;
+      return ok({ id: data.id as string });
+    } catch (err) {
+      return fail(err);
+    }
+  }
+
   async insertParseHistory(fields: {
     raw_payload: unknown;
     extracted_code: string | null;

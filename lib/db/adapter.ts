@@ -25,6 +25,19 @@ export interface DbAdapter {
   // --- error_templates ---
   findTemplateByCode(errorCode: string): Promise<QueryResult<ErrorTemplateRow | null>>;
 
+  createErrorTemplate(fields: {
+    error_code: string;
+    internal_system: string;
+    category: string;
+    severity: "low" | "medium" | "high" | "critical";
+    is_self_service: boolean;
+    self_service_steps: string | null;
+    specialist_diagnostic: string;
+    employee_message: string;
+    escalate_to_dev: boolean;
+  }): Promise<QueryResult<{ id: string }>>;
+
+
   // --- parse_history ---
   insertParseHistory(fields: {
     raw_payload: unknown;
