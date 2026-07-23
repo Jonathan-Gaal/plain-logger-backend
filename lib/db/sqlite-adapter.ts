@@ -220,7 +220,13 @@ export class SqliteAdapter implements DbAdapter {
       const setClauses = Object.keys(fields)
         .map((key) => `${key} = ?`)
         .join(", ");
-      const values = Object.values(fields).map((v) => (typeof v === "boolean" ? (v ? 1 : 0) : v));
+      const values = Object.values(fields).map((v) => (typeof v === "boolean" ? (v ? 1 : 0) : v)) as (
+        | string
+        | number
+        | bigint
+        | Uint8Array
+        | null
+      )[];
 
       if (setClauses.length > 0) {
         conn.prepare(`UPDATE tickets SET ${setClauses} WHERE id = ?`).run(...values, id);
